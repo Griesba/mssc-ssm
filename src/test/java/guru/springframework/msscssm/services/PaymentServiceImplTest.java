@@ -1,6 +1,7 @@
 package guru.springframework.msscssm.services;
 
 import guru.springframework.msscssm.domain.Payment;
+import guru.springframework.msscssm.domain.PaymentState;
 import guru.springframework.msscssm.repositories.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,28 @@ class PaymentServiceImplTest {
         assertEquals("PRE_AUTH", preAuthPayment.getState().toString());
 
         System.out.println(preAuthPayment);
+
+    }
+
+    @Test
+    public void testAuthEvent() {
+        Payment savedPayment = paymentService.newPayment(payment);
+        assertEquals("NEW", savedPayment.getState().toString());
+
+        StateMachine sm = paymentService.preAuth(savedPayment.getId());
+
+        //assertEquals("PRE_AUTH", sm.getState().getId().toString());
+        System.out.println(sm.getState().getId().toString());
+
+
+        if (sm.getState().getId() == PaymentState.PRE_AUTH) {
+            sm = paymentService.authorizePayment(savedPayment.getId());
+
+            //assertEquals("AUTH", sm.getState().getId().toString());
+            System.out.println(sm.getState().getId().toString());
+        } else {
+            System.out.println();
+        }
 
     }
 }
