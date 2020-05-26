@@ -4,6 +4,7 @@ import guru.springframework.msscssm.domain.Payment;
 import guru.springframework.msscssm.domain.PaymentState;
 import guru.springframework.msscssm.repositories.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,7 +49,8 @@ class PaymentServiceImplTest {
 
     }
 
-    @Test
+    @Transactional
+    @RepeatedTest(10)
     public void testAuthEvent() {
         Payment savedPayment = paymentService.newPayment(payment);
         assertEquals("NEW", savedPayment.getState().toString());
